@@ -30,10 +30,11 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/CelticFields_1.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[51.54576479175191,4.666699519678163],[51.64630388116934,4.911906823520087]]);
+        }).fitBounds([[52.66681998314566,5.953660956070142],[53.15787932329935,7.1994635165923535]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -54,19 +55,65 @@
         });
         layer_CartoDbPositron_0;
         map.addLayer(layer_CartoDbPositron_0);
-        map.createPane('pane_OpenRailwayMap_1');
-        map.getPane('pane_OpenRailwayMap_1').style.zIndex = 401;
-        var layer_OpenRailwayMap_1 = L.tileLayer('https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
-            pane: 'pane_OpenRailwayMap_1',
-            opacity: 1.0,
+        function pop_CelticFields_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Complex'] !== null ? autolinker.link(feature.properties['Complex'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['zaakid'] !== null ? autolinker.link(feature.properties['zaakid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AMKnummer'] !== null ? autolinker.link(feature.properties['AMKnummer'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Bron'] !== null ? autolinker.link(feature.properties['Bron'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Beleid'] !== null ? autolinker.link(feature.properties['Beleid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_CelticFields_1_0() {
+            return {
+                pane: 'pane_CelticFields_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(114,155,111,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_CelticFields_1');
+        map.getPane('pane_CelticFields_1').style.zIndex = 401;
+        map.getPane('pane_CelticFields_1').style['mix-blend-mode'] = 'normal';
+        var layer_CelticFields_1 = new L.geoJson(json_CelticFields_1, {
             attribution: '',
-            minZoom: 1,
-            maxZoom: 28,
-            minNativeZoom: 0,
-            maxNativeZoom: 18
+            interactive: true,
+            dataVar: 'json_CelticFields_1',
+            layerName: 'layer_CelticFields_1',
+            pane: 'pane_CelticFields_1',
+            onEachFeature: pop_CelticFields_1,
+            style: style_CelticFields_1_0,
         });
-        layer_OpenRailwayMap_1;
-        map.addLayer(layer_OpenRailwayMap_1);
+        bounds_group.addLayer(layer_CelticFields_1);
+        map.addLayer(layer_CelticFields_1);
         var osmGeocoder = new L.Control.Geocoder({
             collapsed: true,
             position: 'topleft',
