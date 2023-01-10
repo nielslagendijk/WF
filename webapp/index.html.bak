@@ -18,11 +18,6 @@
             width: 2794px;
             height: 1827px;
         }
-		.leaflet-popup-content {
-		min-width: 200px;
-		min-height: 100px;
-		overflow-y: scroll;
-		}
         </style>
         <title></title>
     </head>
