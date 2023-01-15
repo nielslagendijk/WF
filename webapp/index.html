@@ -3,19 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+		<!-- Mobile meta tags to go in head-->
+        <meta name="HandheldFriendly" content="True">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="MobileOptimized" content="320"/>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="cleartype" content="on">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
-        <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
-        <link rel="stylesheet" href="css/leaflet-measure.css">
         <style>
-        #map {
-            width: 2794px;
-            height: 1827px;
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
         }
+		.leaflet-popup-content {
+		min-width: 200px;
+		min-height: 100px;
+		overflow-y: scroll;
+		}
         </style>
         <title></title>
     </head>
@@ -32,36 +42,46 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
-        <script src="js/leaflet-measure.js"></script>
-        <script src="js/leaflet-search.js"></script>
-        <script src="data/Rijksmonumenten_1.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[50.60838198674567,1.4774491834880001],[53.63248989895046,9.01614120379942]]);
+        }).fitBounds([[43.357933737378275,-12.002784407122187],[58.13881836420471,24.14022929154236]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
         L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
-        var measureControl = new L.Control.Measure({
-            position: 'topleft',
-            primaryLengthUnit: 'meters',
-            secondaryLengthUnit: 'kilometers',
-            primaryAreaUnit: 'sqmeters',
-            secondaryAreaUnit: 'hectares'
-        });
-        measureControl.addTo(map);
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
-        .innerHTML = '';
-        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
-        .className += ' fas fa-ruler';
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
-        map.createPane('pane_OpenStreetMap_0');
-        map.getPane('pane_OpenStreetMap_0').style.zIndex = 400;
-        var layer_OpenStreetMap_0 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            pane: 'pane_OpenStreetMap_0',
+        map.createPane('pane_CartoDbPositron_0');
+        map.getPane('pane_CartoDbPositron_0').style.zIndex = 400;
+        var layer_CartoDbPositron_0 = L.tileLayer('http://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            pane: 'pane_CartoDbPositron_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_CartoDbPositron_0;
+        map.addLayer(layer_CartoDbPositron_0);
+        map.createPane('pane_CartoDbDarkMatter_1');
+        map.getPane('pane_CartoDbDarkMatter_1').style.zIndex = 401;
+        var layer_CartoDbDarkMatter_1 = L.tileLayer('http://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+            pane: 'pane_CartoDbDarkMatter_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_CartoDbDarkMatter_1;
+        map.createPane('pane_OpenStreetMap_2');
+        map.getPane('pane_OpenStreetMap_2').style.zIndex = 402;
+        var layer_OpenStreetMap_2 = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenStreetMap_2',
             opacity: 1.0,
             attribution: '',
             minZoom: 1,
@@ -69,150 +89,19 @@
             minNativeZoom: 0,
             maxNativeZoom: 19
         });
-        layer_OpenStreetMap_0;
-        map.addLayer(layer_OpenStreetMap_0);
-        function pop_Rijksmonumenten_1(feature, layer) {
-            var popupContent = '<table>\
-                    <tr>\
-                        <th scope="row">obj_rijksnummer</th>\
-                        <td>' + (feature.properties['obj_rijksnummer'] !== null ? autolinker.link(feature.properties['obj_rijksnummer'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_nummer</th>\
-                        <td>' + (feature.properties['obj_nummer'] !== null ? autolinker.link(feature.properties['obj_nummer'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_naam</th>\
-                        <td>' + (feature.properties['obj_naam'] !== null ? autolinker.link(feature.properties['obj_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_wetsartikel_zkp</th>\
-                        <td>' + (feature.properties['obj_wetsartikel_zkp'] !== null ? autolinker.link(feature.properties['obj_wetsartikel_zkp'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_afv_ind</th>\
-                        <td>' + (feature.properties['obj_afv_ind'] !== null ? autolinker.link(feature.properties['obj_afv_ind'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">cah_omschrijving</th>\
-                        <td>' + (feature.properties['cah_omschrijving'] !== null ? autolinker.link(feature.properties['cah_omschrijving'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">cas_omschrijving</th>\
-                        <td>' + (feature.properties['cas_omschrijving'] !== null ? autolinker.link(feature.properties['cas_omschrijving'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">tfu_omschrijving</th>\
-                        <td>' + (feature.properties['tfu_omschrijving'] !== null ? autolinker.link(feature.properties['tfu_omschrijving'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">prv_naam</th>\
-                        <td>' + (feature.properties['prv_naam'] !== null ? autolinker.link(feature.properties['prv_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">gem_naam</th>\
-                        <td>' + (feature.properties['gem_naam'] !== null ? autolinker.link(feature.properties['gem_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">pla_naam</th>\
-                        <td>' + (feature.properties['pla_naam'] !== null ? autolinker.link(feature.properties['pla_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">buw_naam</th>\
-                        <td>' + (feature.properties['buw_naam'] !== null ? autolinker.link(feature.properties['buw_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">mig_naam</th>\
-                        <td>' + (feature.properties['mig_naam'] !== null ? autolinker.link(feature.properties['mig_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">oad_straat</th>\
-                        <td>' + (feature.properties['oad_straat'] !== null ? autolinker.link(feature.properties['oad_straat'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">oad_huisnummer</th>\
-                        <td>' + (feature.properties['oad_huisnummer'] !== null ? autolinker.link(feature.properties['oad_huisnummer'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">oad_toevoeging</th>\
-                        <td>' + (feature.properties['oad_toevoeging'] !== null ? autolinker.link(feature.properties['oad_toevoeging'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">oad_postcode</th>\
-                        <td>' + (feature.properties['oad_postcode'] !== null ? autolinker.link(feature.properties['oad_postcode'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_ind_bebwkom_zkp</th>\
-                        <td>' + (feature.properties['obj_ind_bebwkom_zkp'] !== null ? autolinker.link(feature.properties['obj_ind_bebwkom_zkp'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_x_coord</th>\
-                        <td>' + (feature.properties['obj_x_coord'] !== null ? autolinker.link(feature.properties['obj_x_coord'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_y_coord</th>\
-                        <td>' + (feature.properties['obj_y_coord'] !== null ? autolinker.link(feature.properties['obj_y_coord'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">obj_ind_proj_zkp</th>\
-                        <td>' + (feature.properties['obj_ind_proj_zkp'] !== null ? autolinker.link(feature.properties['obj_ind_proj_zkp'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">com_rijksnummer</th>\
-                        <td>' + (feature.properties['com_rijksnummer'] !== null ? autolinker.link(feature.properties['com_rijksnummer'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">com_naam</th>\
-                        <td>' + (feature.properties['com_naam'] !== null ? autolinker.link(feature.properties['com_naam'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">com_wetsartikel_zkp</th>\
-                        <td>' + (feature.properties['com_wetsartikel_zkp'] !== null ? autolinker.link(feature.properties['com_wetsartikel_zkp'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <th scope="row">txo_tekst</th>\
-                        <td>' + (feature.properties['txo_tekst'] !== null ? autolinker.link(feature.properties['txo_tekst'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
-        }
-
-        function style_Rijksmonumenten_1_0() {
-            return {
-                pane: 'pane_Rijksmonumenten_1',
-                radius: 4.0,
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(196,60,57,1.0)',
-                interactive: true,
-            }
-        }
-        map.createPane('pane_Rijksmonumenten_1');
-        map.getPane('pane_Rijksmonumenten_1').style.zIndex = 401;
-        map.getPane('pane_Rijksmonumenten_1').style['mix-blend-mode'] = 'normal';
-        var layer_Rijksmonumenten_1 = new L.geoJson(json_Rijksmonumenten_1, {
+        layer_OpenStreetMap_2;
+        map.createPane('pane_OpenRailwayMap_3');
+        map.getPane('pane_OpenRailwayMap_3').style.zIndex = 403;
+        var layer_OpenRailwayMap_3 = L.tileLayer('https://a.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
+            pane: 'pane_OpenRailwayMap_3',
+            opacity: 1.0,
             attribution: '',
-            interactive: true,
-            dataVar: 'json_Rijksmonumenten_1',
-            layerName: 'layer_Rijksmonumenten_1',
-            pane: 'pane_Rijksmonumenten_1',
-            onEachFeature: pop_Rijksmonumenten_1,
-            pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style_Rijksmonumenten_1_0(feature));
-            },
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
         });
-        bounds_group.addLayer(layer_Rijksmonumenten_1);
-        map.addLayer(layer_Rijksmonumenten_1);
+        layer_OpenRailwayMap_3;
         var osmGeocoder = new L.Control.Geocoder({
             collapsed: true,
             position: 'topleft',
@@ -223,14 +112,9 @@
         .className += ' fa fa-search';
         document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
         .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{"OpenRailwayMap": layer_OpenRailwayMap_3,"OpenStreetMap": layer_OpenStreetMap_2,"CartoDb Dark Matter": layer_CartoDbDarkMatter_1,"CartoDb Positron": layer_CartoDbPositron_0,}).addTo(map);
         setBounds();
-        map.addControl(new L.Control.Search({
-            layer: layer_Rijksmonumenten_1,
-            initial: false,
-            hideMarkerOnCollapse: true,
-            propertyName: 'obj_rijksnummer'}));
-        document.getElementsByClassName('search-button')[0].className +=
-         ' fa fa-binoculars';
         </script>
     </body>
 </html>
